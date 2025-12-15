@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes Personnalisées | Loopi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        loopi: {
+                            lavender: '#E6E6FA', blue: '#ADD8E6', mint: '#98FF98', dark: '#5D4C75', pink: '#FFC0CB'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'], heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-gray-700 bg-loopi-lavender/30 min-h-screen flex flex-col">
+
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index-fr.html" class="flex items-center gap-2 group">
+                <img src="images/logo.jpg" alt="Logo Loopi" class="h-12 w-auto rounded-full group-hover:rotate-12 transition-transform duration-300">
+                <span class="font-heading font-bold text-2xl text-loopi-dark tracking-wide">Loopi</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-6 font-heading font-medium text-loopi-dark">
+                <a href="index-fr.html" class="hover:text-loopi-blue transition-colors">Accueil</a>
+                <a href="index-fr.html#shop" class="hover:text-loopi-blue transition-colors">Boutique</a>
+                <a href="custom-fr.html" class="text-loopi-dark font-bold">Commandes Perso</a>
+                <a href="#about" class="hover:text-loopi-blue transition-colors">À Propos</a>
+                
+                <div class="relative">
+                    <button onclick="toggleLangDropdown()" class="flex items-center gap-1 p-2 rounded-full bg-loopi-lavender text-loopi-dark hover:bg-loopi-blue hover:text-white transition-colors">
+                        <i class="fas fa-globe"></i>
+                        <span id="current-lang">FR</span>
+                        <i class="fas fa-caret-down"></i>
+                    </button>
+                    <div id="lang-dropdown" class="absolute right-0 mt-2 w-20 bg-white rounded-lg shadow-xl hidden">
+                        <a href="custom.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">EN</a>
+                        <a href="custom-fr.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-bold">FR</a>
+                        <a href="custom-ar.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AR</a>
+                    </div>
+                </div>
+
+                <a href="https://wa.me/21640963719" target="_blank" class="bg-loopi-dark text-white px-5 py-2 rounded-full hover:bg-loopi-blue transition-all shadow-md transform hover:scale-105">
+                    Commander Maintenant
+                </a>
+            </div>
+
+            <div class="flex items-center md:hidden gap-3">
+                <div class="relative">
+                    <button onclick="toggleLangDropdown()" class="flex items-center gap-1 p-2 rounded-full bg-loopi-lavender text-loopi-dark">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                </div>
+                <button onclick="toggleMenu()" class="text-loopi-dark text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 p-4 flex flex-col gap-4 text-center">
+            <a href="index-fr.html" class="block text-loopi-dark py-2">Accueil</a>
+            <a href="index-fr.html#shop" class="block text-loopi-dark py-2">Boutique</a>
+            <a href="custom-fr.html" class="block text-loopi-dark py-2 font-bold">Commandes Perso</a>
+            <a href="https://wa.me/21640963719" target="_blank" class="block bg-loopi-dark text-white py-3 rounded-xl font-bold">Commander Maintenant</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-12">
+                <h1 class="font-heading text-4xl md:text-5xl font-bold text-loopi-dark mb-4">
+                    Transformez Vos Idées en Art Adorable !
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Nous adorons donner vie à vos visions uniques. Dites-nous ce dont vous rêvez !
+                </p>
+            </div>
+
+            <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-4 border-loopi-blue/50">
+                <h2 class="font-heading text-2xl font-bold text-loopi-dark mb-6 text-center">
+                    Formulaire de Demande de Commande Personnalisée
+                </h2>
+                
+                <form id="custom-order-form" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Votre Nom</label>
+                        <input type="text" id="name" name="name" required
+                               class="mt-1 block w-full rounded-xl border-2 border-loopi-lavender shadow-sm p-3 focus:border-loopi-blue focus:ring focus:ring-loopi-blue/50">
+                    </div>
+
+                    <div>
+                        <label for="idea" class="block text-sm font-medium text-gray-700">Idée de Produit (ex: 'un porte-clés éléphant violet')</label>
+                        <input type="text" id="idea" name="idea" required
+                               class="mt-1 block w-full rounded-xl border-2 border-loopi-lavender shadow-sm p-3 focus:border-loopi-blue focus:ring focus:ring-loopi-blue/50">
+                    </div>
+
+                    <div>
+                        <label for="details" class="block text-sm font-medium text-gray-700">Couleurs Préférées / Détails de Design</label>
+                        <textarea id="details" name="details" rows="4" required
+                                  class="mt-1 block w-full rounded-xl border-2 border-loopi-lavender shadow-sm p-3 focus:border-loopi-blue focus:ring focus:ring-loopi-blue/50"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="whatsapp" class="block text-sm font-medium text-gray-700">Numéro WhatsApp (Crucial pour le suivi)</label>
+                        <input type="tel" id="whatsapp" name="whatsapp" placeholder="+216 XX XXX XXX" required
+                               class="mt-1 block w-full rounded-xl border-2 border-loopi-lavender shadow-sm p-3 focus:border-loopi-blue focus:ring focus:ring-loopi-blue/50">
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full bg-loopi-dark text-white font-heading font-bold text-lg py-3 rounded-xl shadow-lg hover:bg-loopi-blue transition-colors transform hover:scale-[1.01]">
+                        Soumettre Mon Idée Personnalisée
+                    </button>
+                    
+                    <p class="text-center text-sm text-gray-500 pt-4">
+                        *Note: La soumission de ce formulaire ouvrira WhatsApp pour la confirmation finale et la discussion.
+                    </p>
+                </form>
+            </div>
+
+            <div class="mt-12 text-center">
+                <h3 class="font-heading text-2xl font-bold text-loopi-dark mb-6">Comment ça Marche</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-white/70 rounded-2xl shadow-md border border-loopi-mint">
+                        <span class="text-4xl block mb-3">1️⃣</span>
+                        <h4 class="font-bold text-loopi-dark">Partagez Votre Idée</h4>
+                        <p class="text-sm">Remplissez le formulaire ci-dessus avec votre vision.</p>
+                    </div>
+                    <div class="p-6 bg-white/70 rounded-2xl shadow-md border border-loopi-mint">
+                        <span class="text-4xl block mb-3">2️⃣</span>
+                        <h4 class="font-bold text-loopi-dark">Discutons & Confirmons</h4>
+                        <p class="text-sm">Nous discuterons sur WhatsApp pour finaliser les détails et les prix.</p>
+                    </div>
+                    <div class="p-6 bg-white/70 rounded-2xl shadow-md border border-loopi-mint">
+                        <span class="text-4xl block mb-3">3️⃣</span>
+                        <h4 class="font-bold text-loopi-dark">Nous Créons la Magie !</h4>
+                        <p class="text-sm">Votre pièce unique est crochetée et prête pour la livraison !</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-loopi-dark text-white py-10 mt-10">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-3 mb-6">
+                <img src="images/logo.jpg" class="h-10 w-10 rounded-full border-2 border-white" alt="Loopi">
+                <span class="font-heading text-2xl font-bold">Loopi</span>
+            </div>
+            <p class="mb-6 opacity-80">Pas seulement du crochet, c'est Loopi.</p>
+            
+            <div class="flex justify-center gap-6 mb-8 text-2xl">
+                <a href="https://www.instagram.com/by.loopi" target="_blank" class="hover:text-loopi-pink transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/1LcvSNbLFp/" target="_blank" class="hover:text-loopi-blue transition-colors"><i class="fab fa-facebook-f"></i></a>
+                <a href="mailto:byloopi77@gmail.com" class="hover:text-loopi-mint transition-colors"><i class="fas fa-envelope"></i></a>
+            </div>
+
+            <p class="text-sm opacity-60">
+                © 2025 Loopi. Fait avec amour à El Mourouj, Tunisie 🇹🇳
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Language Switcher Toggle
+        function toggleLangDropdown() {
+            const dropdown = document.getElementById('lang-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Form Submission Logic
+        document.getElementById('custom-order-form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const name = document.getElementById('name').value;
+            const idea = document.getElementById('idea').value;
+            const details = document.getElementById('details').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const phoneNumber = "21640963719";
+
+            // Construct a rich, pre-filled WhatsApp message in French
+            const message = `DEMANDE DE COMMANDE PERSONNALISÉE:
+            
+Bonjour Loopi ! Je suis ${name}, et j'ai une idée de commande personnalisée.
+            
+Idée de Produit: ${idea}
+            
+Détails/Couleurs: ${details}
+            
+Mon numéro WhatsApp: ${whatsapp}
+            
+Je suis prêt(e) à discuter des prochaines étapes !`;
+
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            alert("Merci ! Ouverture de WhatsApp pour continuer votre commande personnalisée.");
+            window.open(url, '_blank');
+        });
+    </script>
+</body>
+</html>
