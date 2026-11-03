@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loopi OS — Crochet Business Workspace</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        loopi: {
+                            50: '#fcf8ff',
+                            100: '#f4ebff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                            cream: '#fffdfa',
+                            softBg: '#f9f6fc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f7f4fa;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d8b4fe;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+
+    <!-- MASCOT ASSETS DATA URIS (Embedded Base64 representations or exact imagery) -->
+    <script>
+        // Store embedded official mascot data URI to prevent broken external links
+        const OFFICIAL_MASCOT_BASE64 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23e9d5ff'/><text x='50%' y='55%' text-anchor='middle' fill='%237e22ce' font-size='24' font-weight='bold'>Loopi</text></svg>";
+    </script>
+
+    <!-- MOBILE TOP BAR -->
+    <header class="md:hidden bg-white border-b border-purple-100 p-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center p-0.5 overflow-hidden border border-purple-300">
+                <img src="https://lh3.googleusercontent.com/d/1000322182.png" alt="Loopi Mascot" class="w-full h-full object-cover rounded-full" onerror="this.src=OFFICIAL_MASCOT_BASE64">
+            </div>
+            <div>
+                <h1 class="font-extrabold text-lg text-purple-950 leading-none">Loopi OS</h1>
+                <span class="text-xs text-purple-500 font-medium">Craft Workspace</span>
+            </div>
+        </div>
+        <button id="mobile-menu-btn" class="p-2 rounded-xl text-purple-700 hover:bg-purple-50 focus:outline-none">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </header>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out z-50 w-64 bg-white border-r border-purple-100 flex flex-col justify-between shadow-lg md:shadow-none">
+        <div>
+            <!-- Sidebar Header -->
+            <div class="p-6 border-b border-purple-50 flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-2xl bg-purple-100 border-2 border-purple-300 p-0.5 shadow-sm overflow-hidden flex-shrink-0">
+                    <img src="https://lh3.googleusercontent.com/d/1000322182.png" alt="Loopi Mascot" class="w-full h-full object-cover rounded-xl" onerror="this.src=OFFICIAL_MASCOT_BASE64">
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl text-purple-950 tracking-tight leading-tight">Loopi OS</h1>
+                    <p class="text-xs font-semibold text-purple-500">Not just crochet, It's Loopi</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5 custom-scrollbar overflow-y-auto max-h-[calc(100vh-180px)]">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-purple-900 bg-purple-100/70">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('inventory')" id="nav-inventory" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="box" class="w-5 h-5"></i>
+                    <span>Inventory & Yarn</span>
+                </button>
+                <button onclick="switchTab('products')" id="nav-products" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span>Product Catalog</span>
+                </button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span>Orders & CRM</span>
+                </button>
+                <button onclick="switchTab('production')" id="nav-production" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="hammer" class="w-5 h-5"></i>
+                    <span>Production Studio</span>
+                </button>
+                <button onclick="switchTab('finance')" id="nav-finance" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span>Finance & Profit</span>
+                </button>
+                <button onclick="switchTab('wishlist')" id="nav-wishlist" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span>Wishlist & Ideas</span>
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-150 text-slate-600 hover:bg-purple-50 hover:text-purple-700">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span>Settings & Data</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer / Quick Status -->
+        <div class="p-4 border-t border-purple-50">
+            <div class="bg-purple-50 rounded-xl p-3 flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-200 flex items-center justify-center text-purple-700">
+                    <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+                </div>
+                <div class="text-xs">
+                    <p class="font-bold text-purple-900">Loopi Craft OS</p>
+                    <p class="text-purple-600 font-medium" id="sidebar-currency-lbl">Currency: TND</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- BACKDROP FOR MOBILE MENU -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/40 z-40 hidden md:hidden"></div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 min-w-0 p-4 sm:p-6 md:p-8 custom-scrollbar overflow-y-auto max-h-screen">
+
+        <!-- GLOBAL NOTIFICATION TOAST CONTAINER -->
+        <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+        <!-- ================= DASHBOARD MODULE ================= -->
+        <section id="module-dashboard" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Business Overview</h2>
+                    <p class="text-slate-500 text-sm mt-1">Here is what is happening in your crochet studio today.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openModal('modal-order')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>New Order</span>
+                    </button>
+                    <button onclick="openModal('modal-expense')" class="bg-purple-50 text-purple-700 hover:bg-purple-100 px-4 py-2.5 rounded-xl text-sm font-semibold transition flex items-center space-x-2">
+                        <i data-lucide="receipt" class="w-4 h-4"></i>
+                        <span>Record Expense</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- METRIC CARDS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Total Revenue Card -->
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-purple-500">Total Income</span>
+                        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-2xl font-extrabold text-slate-900" id="dash-income">0.00 TND</span>
+                        <p class="text-xs text-slate-400 mt-1">Recorded sales & deposits</p>
+                    </div>
+                </div>
+
+                <!-- Total Expenses Card -->
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-purple-500">Total Expenses</span>
+                        <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl">
+                            <i data-lucide="trending-down" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-2xl font-extrabold text-slate-900" id="dash-expenses">0.00 TND</span>
+                        <p class="text-xs text-slate-400 mt-1">Yarn, supplies & packaging</p>
+                    </div>
+                </div>
+
+                <!-- Active Orders Card -->
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-purple-500">Pending Orders</span>
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-2xl font-extrabold text-slate-900" id="dash-pending-orders">0</span>
+                        <p class="text-xs text-slate-400 mt-1">Needs creation / fulfillment</p>
+                    </div>
+                </div>
+
+                <!-- Available Products Card -->
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-purple-500">Ready Stock</span>
+                        <div class="p-2.5 bg-purple-50 text-purple-600 rounded-xl">
+                            <i data-lucide="package" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-2xl font-extrabold text-slate-900" id="dash-ready-products">0</span>
+                        <p class="text-xs text-slate-400 mt-1">Catalog items available</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD CONTENT SPLIT -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- MAIN COLUMN: ACTIVE PRODUCTION & RECENT ORDERS -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Production Tasks Summary -->
+                    <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-lg text-slate-900 flex items-center space-x-2">
+                                <i data-lucide="sparkles" class="w-5 h-5 text-purple-600"></i>
+                                <span>Current Production Queue</span>
+                            </h3>
+                            <button onclick="switchTab('production')" class="text-xs font-bold text-purple-600 hover:text-purple-800">View All →</button>
+                        </div>
+                        <div id="dash-production-list" class="space-y-3">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-lg text-slate-900 flex items-center space-x-2">
+                                <i data-lucide="shopping-bag" class="w-5 h-5 text-purple-600"></i>
+                                <span>Recent Orders</span>
+                            </h3>
+                            <button onclick="switchTab('orders')" class="text-xs font-bold text-purple-600 hover:text-purple-800">Manage Orders →</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr class="border-b border-purple-50 text-xs text-slate-400 uppercase font-semibold">
+                                        <th class="pb-3">Customer</th>
+                                        <th class="pb-3">Status</th>
+                                        <th class="pb-3">Payment</th>
+                                        <th class="pb-3 text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-orders-tbody" class="divide-y divide-purple-50">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIDE COLUMN: LOW STOCK ALERTS & MASCOT BANNER -->
+                <div class="space-y-6">
+                    <!-- Official Mascot Welcome Banner -->
+                    <div class="bg-gradient-to-br from-purple-700 to-purple-900 text-white rounded-2xl p-6 shadow-md relative overflow-hidden flex items-center space-x-4">
+                        <div class="w-24 h-24 flex-shrink-0 bg-purple-300/30 rounded-2xl p-1 border border-purple-400/40 shadow-inner">
+                            <img src="https://lh3.googleusercontent.com/d/1000322182.png" alt="Loopi Official Mascot" class="w-full h-full object-cover rounded-xl" onerror="this.src=OFFICIAL_MASCOT_BASE64">
+                        </div>
+                        <div>
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-purple-400/30 text-purple-100 mb-1">Handmade OS</span>
+                            <h4 class="font-extrabold text-lg leading-tight">Welcome to Loopi OS</h4>
+                            <p class="text-xs text-purple-200 mt-1 leading-relaxed">Keep creating wonderful crochet pieces!</p>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Alerts -->
+                    <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-base text-slate-900 flex items-center space-x-2">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
+                                <span>Low Inventory Alerts</span>
+                            </h3>
+                            <button onclick="switchTab('inventory')" class="text-xs font-bold text-purple-600 hover:text-purple-800">Restock</button>
+                        </div>
+                        <div id="dash-low-stock-list" class="space-y-2.5">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= INVENTORY MODULE ================= -->
+        <section id="module-inventory" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Yarn & Materials</h2>
+                    <p class="text-slate-500 text-sm mt-1">Track yarn skeins, hooks, safety eyes, polyfill, and packaging supplies.</p>
+                </div>
+                <button onclick="openModal('modal-material')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2 self-start sm:self-auto">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Material</span>
+                </button>
+            </div>
+
+            <!-- Controls: Search & Category Filter -->
+            <div class="bg-white p-4 rounded-2xl border border-purple-100 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="inventory-search" oninput="renderInventory()" placeholder="Search material name, color, brand..." class="w-full pl-10 pr-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <select id="inventory-category-filter" onchange="renderInventory()" class="px-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium text-slate-700">
+                    <option value="ALL">All Categories</option>
+                    <option value="Yarn">Yarn</option>
+                    <option value="Hooks & Tools">Hooks & Tools</option>
+                    <option value="Stuffing & Safety Eyes">Stuffing & Safety Eyes</option>
+                    <option value="Packaging & Labels">Packaging & Labels</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+            </div>
+
+            <!-- Inventory Grid -->
+            <div id="inventory-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ================= PRODUCT CATALOG MODULE ================= -->
+        <section id="module-products" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Product Catalog</h2>
+                    <p class="text-slate-500 text-sm mt-1">Manage your crochet designs, creations, available stock, and pricing.</p>
+                </div>
+                <button onclick="openModal('modal-product')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2 self-start sm:self-auto">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Product</span>
+                </button>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-white p-4 rounded-2xl border border-purple-100 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="product-search" oninput="renderProducts()" placeholder="Search product name or description..." class="w-full pl-10 pr-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <select id="product-status-filter" onchange="renderProducts()" class="px-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium text-slate-700">
+                    <option value="ALL">All Statuses</option>
+                    <option value="available">Available</option>
+                    <option value="prototype">Prototype / Sample</option>
+                    <option value="reserved">Reserved</option>
+                    <option value="sold">Sold Out</option>
+                    <option value="archived">Archived</option>
+                </select>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ================= ORDERS & CRM MODULE ================= -->
+        <section id="module-orders" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Orders & Customers</h2>
+                    <p class="text-slate-500 text-sm mt-1">Manage handmade custom commissions, stock orders, and customer details.</p>
+                </div>
+                <button onclick="openModal('modal-order')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2 self-start sm:self-auto">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Create Order</span>
+                </button>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-white p-4 rounded-2xl border border-purple-100 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="order-search" oninput="renderOrders()" placeholder="Search customer name, phone, order item..." class="w-full pl-10 pr-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <select id="order-status-filter" onchange="renderOrders()" class="px-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium text-slate-700">
+                    <option value="ALL">All Order Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="ready">Ready for Pickup/Delivery</option>
+                    <option value="delivered">Delivered / Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <!-- Orders Table / Cards -->
+            <div id="orders-list-container" class="space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ================= PRODUCTION STUDIO MODULE ================= -->
+        <section id="module-production" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Production Studio</h2>
+                    <p class="text-slate-500 text-sm mt-1">Track active crochet project tasks, deadlines, and craft progress.</p>
+                </div>
+                <button onclick="openModal('modal-task')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2 self-start sm:self-auto">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>New Task</span>
+                </button>
+            </div>
+
+            <!-- Kanban Board Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- To Do Column -->
+                <div class="bg-slate-100/70 p-4 rounded-2xl border border-slate-200 flex flex-col">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-extrabold text-sm uppercase tracking-wider text-slate-700 flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                            <span>To Do</span>
+                        </span>
+                        <span id="count-todo" class="bg-slate-200 text-slate-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-todo" class="space-y-3 flex-1 custom-scrollbar min-h-[200px]">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- In Progress Column -->
+                <div class="bg-purple-50/70 p-4 rounded-2xl border border-purple-200 flex flex-col">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-extrabold text-sm uppercase tracking-wider text-purple-800 flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                            <span>In Progress</span>
+                        </span>
+                        <span id="count-in_progress" class="bg-purple-200 text-purple-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-in_progress" class="space-y-3 flex-1 custom-scrollbar min-h-[200px]">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Completed Column -->
+                <div class="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200 flex flex-col">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-extrabold text-sm uppercase tracking-wider text-emerald-800 flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                            <span>Completed</span>
+                        </span>
+                        <span id="count-completed" class="bg-emerald-200 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-completed" class="space-y-3 flex-1 custom-scrollbar min-h-[200px]">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FINANCE MODULE ================= -->
+        <section id="module-finance" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Finance & Profit</h2>
+                    <p class="text-slate-500 text-sm mt-1">Record revenue from sales and costs of yarn, safety eyes, or packaging.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openModal('modal-income')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Record Income</span>
+                    </button>
+                    <button onclick="openModal('modal-expense')" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2">
+                        <i data-lucide="minus" class="w-4 h-4"></i>
+                        <span>Record Expense</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Financial Cards Summary -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white rounded-2xl p-6 border border-emerald-100 shadow-sm">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Total Income</span>
+                    <p class="text-3xl font-extrabold text-slate-900 mt-2" id="fin-income">0.00 TND</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 border border-rose-100 shadow-sm">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Total Expenses</span>
+                    <p class="text-3xl font-extrabold text-slate-900 mt-2" id="fin-expenses">0.00 TND</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm">
+                    <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Net Calculated Profit</span>
+                    <p class="text-3xl font-extrabold text-purple-900 mt-2" id="fin-profit">0.00 TND</p>
+                </div>
+            </div>
+
+            <!-- Transactions Ledger -->
+            <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm space-y-4">
+                <h3 class="font-extrabold text-lg text-slate-900">Transaction History</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b border-purple-100 text-xs text-slate-400 uppercase font-semibold">
+                                <th class="pb-3">Date</th>
+                                <th class="pb-3">Type</th>
+                                <th class="pb-3">Category</th>
+                                <th class="pb-3">Description</th>
+                                <th class="pb-3 text-right">Amount</th>
+                                <th class="pb-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="finance-tbody" class="divide-y divide-purple-50">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= WISHLIST & IDEAS MODULE ================= -->
+        <section id="module-wishlist" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Wishlist & Ideas</h2>
+                    <p class="text-slate-500 text-sm mt-1">Inspiration, future crochet collections, pattern ideas, and yarn wishlists.</p>
+                </div>
+                <button onclick="openModal('modal-idea')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition flex items-center space-x-2 self-start sm:self-auto">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Idea / Inspiration</span>
+                </button>
+            </div>
+
+            <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ================= SETTINGS & BACKUP MODULE ================= -->
+        <section id="module-settings" class="tab-content hidden space-y-6">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Settings & Backup</h2>
+                <p class="text-slate-500 text-sm mt-1">Manage your business details, default currency, and export/import local data.</p>
+            </div>
+
+            <!-- Business Information Settings -->
+            <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm max-w-2xl space-y-4">
+                <h3 class="font-extrabold text-lg text-slate-900 flex items-center space-x-2">
+                    <i data-lucide="store" class="w-5 h-5 text-purple-600"></i>
+                    <span>Business Configuration</span>
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Business Name</label>
+                        <input type="text" id="setting-biz-name" class="w-full px-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-semibold" value="Loopi Handmade">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Default Currency Code</label>
+                        <select id="setting-currency" class="w-full px-4 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-semibold text-slate-700">
+                            <option value="TND">TND - Tunisian Dinar</option>
+                            <option value="USD">USD - US Dollar ($)</option>
+                            <option value="EUR">EUR - Euro (€)</option>
+                            <option value="GBP">GBP - British Pound (£)</option>
+                            <option value="CAD">CAD - Canadian Dollar ($)</option>
+                        </select>
+                    </div>
+                    <button onclick="saveSettings()" class="bg-purple-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:bg-purple-700 transition">Save Business Info</button>
+                </div>
+            </div>
+
+            <!-- Data Backup & Restore -->
+            <div class="bg-white rounded-2xl p-6 border border-purple-100 shadow-sm max-w-2xl space-y-4">
+                <h3 class="font-extrabold text-lg text-slate-900 flex items-center space-x-2">
+                    <i data-lucide="database" class="w-5 h-5 text-purple-600"></i>
+                    <span>Data Export & Backup</span>
+                </h3>
+                <p class="text-sm text-slate-600">Your data is safely stored inside your browser's LocalStorage. You can export a copy as a JSON file anytime to back up your business data or transfer it to another device.</p>
+                
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <button onclick="exportJSONData()" class="bg-purple-100 text-purple-800 hover:bg-purple-200 px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center space-x-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Export Backup (JSON)</span>
+                    </button>
+                    <label class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center space-x-2 cursor-pointer">
+                        <i data-lucide="upload" class="w-4 h-4"></i>
+                        <span>Import Backup</span>
+                        <input type="file" id="import-file-input" onchange="importJSONData(event)" accept=".json" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="bg-rose-50/60 rounded-2xl p-6 border border-rose-200 max-w-2xl space-y-4">
+                <h3 class="font-extrabold text-lg text-rose-900 flex items-center space-x-2">
+                    <i data-lucide="alert-octagon" class="w-5 h-5 text-rose-600"></i>
+                    <span>Reset Application Data</span>
+                </h3>
+                <p class="text-sm text-rose-700">Clear all local database entries including products, yarn stock, orders, tasks, and finance records.</p>
+                <button onclick="confirmResetData()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition">Clear All Data</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= MODALS & FORM DIALOGS ================= -->
+
+    <!-- MATERIAL MODAL -->
+    <div id="modal-material" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative animate-fade-in">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 id="modal-material-title" class="font-extrabold text-lg text-slate-900">Add Yarn / Material</h3>
+                <button onclick="closeModal('modal-material')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-material" onsubmit="handleMaterialSubmit(event)" class="space-y-3">
+                <input type="hidden" id="mat-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Material Name *</label>
+                    <input type="text" id="mat-name" required placeholder="e.g. Plush Velvet Yarn" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category</label>
+                        <select id="mat-category" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="Yarn">Yarn</option>
+                            <option value="Hooks & Tools">Hooks & Tools</option>
+                            <option value="Stuffing & Safety Eyes">Stuffing & Safety Eyes</option>
+                            <option value="Packaging & Labels">Packaging & Labels</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Color / Code</label>
+                        <input type="text" id="mat-color" placeholder="e.g. Lavender #04" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Quantity *</label>
+                        <input type="number" step="any" id="mat-quantity" required placeholder="0" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Unit</label>
+                        <select id="mat-unit" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="skeins">skeins</option>
+                            <option value="grams">grams</option>
+                            <option value="meters">meters</option>
+                            <option value="pieces">pieces</option>
+                            <option value="packs">packs</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Unit Cost</label>
+                        <input type="number" step="any" id="mat-cost" placeholder="0.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Low Stock Threshold</label>
+                    <input type="number" id="mat-min" placeholder="2" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none font-medium">
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-material')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">Save Material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PRODUCT MODAL -->
+    <div id="modal-product" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 id="modal-product-title" class="font-extrabold text-lg text-slate-900">Add Product Catalog Item</h3>
+                <button onclick="closeModal('modal-product')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-product" onsubmit="handleProductSubmit(event)" class="space-y-3">
+                <input type="hidden" id="prod-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Product Name *</label>
+                    <input type="text" id="prod-name" required placeholder="e.g. Crochet Bunny Plushie" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category</label>
+                        <select id="prod-category" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="Amigurumi & Plushies">Amigurumi & Plushies</option>
+                            <option value="Bags & Totes">Bags & Totes</option>
+                            <option value="Hats & Wearables">Hats & Wearables</option>
+                            <option value="Keychains & Charms">Keychains & Charms</option>
+                            <option value="Home Decor">Home Decor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Status</label>
+                        <select id="prod-status" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="available">Available</option>
+                            <option value="prototype">Prototype</option>
+                            <option value="reserved">Reserved</option>
+                            <option value="sold">Sold Out</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Selling Price *</label>
+                        <input type="number" step="any" id="prod-price" required placeholder="45.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Cost Price</label>
+                        <input type="number" step="any" id="prod-cost" placeholder="12.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Stock Qty</label>
+                        <input type="number" id="prod-qty" placeholder="1" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Description / Notes</label>
+                    <textarea id="prod-desc" rows="2" placeholder="Pattern notes, dimensions, yarns used..." class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none resize-none"></textarea>
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-product')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ORDER MODAL -->
+    <div id="modal-order" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 id="modal-order-title" class="font-extrabold text-lg text-slate-900">Create Order</h3>
+                <button onclick="closeModal('modal-order')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-order" onsubmit="handleOrderSubmit(event)" class="space-y-3">
+                <input type="hidden" id="ord-id">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Customer Name *</label>
+                        <input type="text" id="ord-customer" required placeholder="e.g. Sarah K." class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Contact Details</label>
+                        <input type="text" id="ord-contact" placeholder="Phone or Instagram handle" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Item / Details *</label>
+                    <input type="text" id="ord-item" required placeholder="e.g. Custom Pastel Pink Bear" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Order Status</label>
+                        <select id="ord-status" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="ready">Ready</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Payment Status</label>
+                        <select id="ord-payment-status" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="unpaid">Unpaid</option>
+                            <option value="deposit">Deposit Paid</option>
+                            <option value="paid">Fully Paid</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Total Amount *</label>
+                        <input type="number" step="any" id="ord-amount" required placeholder="55.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Expected Completion</label>
+                        <input type="date" id="ord-date" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-order')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">Save Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TASK MODAL -->
+    <div id="modal-task" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 class="font-extrabold text-lg text-slate-900">New Production Task</h3>
+                <button onclick="closeModal('modal-task')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-task" onsubmit="handleTaskSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Task Title *</label>
+                    <input type="text" id="task-title" required placeholder="e.g. Crochet 20 granny squares" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Priority</label>
+                        <select id="task-priority" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="Normal">Normal</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Deadline</label>
+                        <input type="date" id="task-deadline" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-task')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EXPENSE MODAL -->
+    <div id="modal-expense" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 class="font-extrabold text-lg text-slate-900">Record Expense</h3>
+                <button onclick="closeModal('modal-expense')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-expense" onsubmit="handleFinanceSubmit(event, 'expense')" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Description *</label>
+                    <input type="text" id="exp-desc" required placeholder="e.g. Bought 5 skeins Chenille yarn" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category</label>
+                        <select id="exp-cat" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="Yarn & Materials">Yarn & Materials</option>
+                            <option value="Packaging & Delivery">Packaging & Delivery</option>
+                            <option value="Tools & Equipment">Tools & Equipment</option>
+                            <option value="Marketing & Ads">Marketing & Ads</option>
+                            <option value="Other Expenses">Other Expenses</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Amount *</label>
+                        <input type="number" step="any" id="exp-amount" required placeholder="25.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-expense')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-sm">Record Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- INCOME MODAL -->
+    <div id="modal-income" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 class="font-extrabold text-lg text-slate-900">Record Direct Income</h3>
+                <button onclick="closeModal('modal-income')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-income" onsubmit="handleFinanceSubmit(event, 'income')" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Description *</label>
+                    <input type="text" id="inc-desc" required placeholder="e.g. Craft Fair cash sale" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category</label>
+                        <select id="inc-cat" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="Direct Sale">Direct Sale</option>
+                            <option value="Custom Order Payment">Custom Order Payment</option>
+                            <option value="Marketplace / Craft Fair">Marketplace / Craft Fair</option>
+                            <option value="Other Income">Other Income</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Amount *</label>
+                        <input type="number" step="any" id="inc-amount" required placeholder="60.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-income')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">Save Income</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- IDEA MODAL -->
+    <div id="modal-idea" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-purple-100 space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-purple-50 pb-3">
+                <h3 class="font-extrabold text-lg text-slate-900">Add Wishlist / Idea</h3>
+                <button onclick="closeModal('modal-idea')" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-idea" onsubmit="handleIdeaSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Title *</label>
+                    <input type="text" id="idea-title" required placeholder="e.g. Giant Velvet Octopus Pattern" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none font-medium">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Type</label>
+                        <select id="idea-type" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                            <option value="Product Concept">Product Concept</option>
+                            <option value="Yarn To Buy">Yarn To Buy</option>
+                            <option value="Pattern Inspiration">Pattern Inspiration</option>
+                            <option value="Collection Idea">Collection Idea</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Est. Cost</label>
+                        <input type="number" step="any" id="idea-cost" placeholder="15.00" class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm font-medium focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Notes & Description</label>
+                    <textarea id="idea-notes" rows="3" placeholder="Hooks needed, colors to test..." class="w-full px-3.5 py-2 bg-purple-50/50 border border-purple-100 rounded-xl text-sm focus:outline-none resize-none"></textarea>
+                </div>
+                <div class="pt-3 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-idea')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm">Save Idea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CORE JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // Default Sample Data Key
+        const STORAGE_KEY = "LOOP_OS_DATA_V1";
+
+        // Initial Sample State (Used if LocalStorage is empty)
+        const initialAppState = {
+            settings: {
+                businessName: "Loopi Crochet Studio",
+                currency: "TND"
+            },
+            materials: [
+                { id: "m1", name: "Chunky Plush Chenille Yarn", category: "Yarn", color: "Lilac Violet #12", quantity: 12, unit: "skeins", cost: 8.5, min: 3 },
+                { id: "m2", name: "Cotton DK Yarn", category: "Yarn", color: "Cream White #01", quantity: 2, unit: "skeins", cost: 6.0, min: 4 },
+                { id: "m3", name: "Safety Eyes 12mm", category: "Stuffing & Safety Eyes", color: "Black", quantity: 50, unit: "pieces", cost: 0.2, min: 10 },
+                { id: "m4", name: "Hypoallergenic Polyfill", category: "Stuffing & Safety Eyes", color: "White", quantity: 800, unit: "grams", cost: 0.015, min: 200 }
+            ],
+            products: [
+                { id: "p1", name: "Loopi Bunny Amigurumi", category: "Amigurumi & Plushies", price: 45.0, cost: 12.0, qty: 3, status: "available", desc: "Signature bunny with purple bows." },
+                { id: "p2", name: "Pastel Daisy Tote Bag", category: "Bags & Totes", price: 75.0, cost: 22.0, qty: 1, status: "available", desc: "Hand-crocheted daisy granny square shoulder bag." }
+            ],
+            orders: [
+                { id: "o1", customer: "Amira B.", contact: "+216 22 345 678", item: "Custom Loopi Lavender Bear", status: "in_progress", paymentStatus: "deposit", amount: 65.0, date: "2026-11-15" }
+            ],
+            tasks: [
+                { id: "t1", title: "Crochet ears for Amira's order", status: "in_progress", priority: "High", deadline: "2026-11-10" },
+                { id: "t2", title: "Assemble daisy squares for tote bag", status: "todo", priority: "Normal", deadline: "2026-11-20" }
+            ],
+            transactions: [
+                { id: "f1", date: "2026-11-01", type: "income", category: "Custom Order Deposit", description: "Deposit from Amira B.", amount: 35.0 },
+                { id: "f2", date: "2026-11-02", type: "expense", category: "Yarn & Materials", description: "Purchase Lilac Chenille Skeins", amount: 25.5 }
+            ],
+            ideas: [
+                { id: "i1", title: "Pastel Frog Backpack", type: "Product Concept", cost: 20.0, notes: "Using green and pink velvet yarn." }
+            ]
+        };
+
+        let appState = loadData();
+
+        // Save & Load Functions
+        function loadData() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) return JSON.parse(stored);
+            } catch(e) {
+                console.error("Could not load from localStorage", e);
+            }
+            return JSON.parse(JSON.stringify(initialAppState));
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+                renderAll();
+            } catch(e) {
+                showToast("Failed to save data locally.", "error");
+            }
+        }
+
+        // Toast Message Notification System
+        function showToast(message, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-lg font-semibold text-sm flex items-center space-x-2 text-white transition-all transform translate-y-2 ${type === 'error' ? 'bg-rose-600' : 'bg-purple-800'}`;
+            toast.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle'}" class="w-4 h-4"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-0");
+                setTimeout(() => toast.remove(), 200);
+            }, 3000);
+        }
+
+        // NAVIGATION LOGIC
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-purple-100/70', 'text-purple-900');
+                el.classList.add('text-slate-600');
+            });
+
+            const targetModule = document.getElementById(`module-${tabId}`);
+            if (targetModule) targetModule.classList.remove('hidden');
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-purple-100/70', 'text-purple-900');
+                activeNav.classList.remove('text-slate-600');
+            }
+
+            // Close mobile menu if open
+            closeMobileMenu();
+        }
+
+        // MOBILE SIDEBAR TOGGLE
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+            backdrop.classList.remove('hidden');
+        });
+        backdrop.addEventListener('click', closeMobileMenu);
+
+        function closeMobileMenu() {
+            sidebar.classList.add('-translate-x-full');
+            backdrop.classList.add('hidden');
+        }
+
+        // MODAL TOGGLES
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // FORMATTING UTILITIES
+        function formatMoney(amount) {
+            const val = parseFloat(amount || 0).toFixed(2);
+            return `${val} ${appState.settings.currency || 'TND'}`;
+        }
+
+        // ================= RENDERING FUNCTIONS =================
+
+        function renderAll() {
+            // Update currency indicators
+            document.getElementById('sidebar-currency-lbl').innerText = `Currency: ${appState.settings.currency}`;
+            document.getElementById('setting-currency').value = appState.settings.currency || 'TND';
+            document.getElementById('setting-biz-name').value = appState.settings.businessName || 'Loopi Studio';
+
+            renderDashboard();
+            renderInventory();
+            renderProducts();
+            renderOrders();
+            renderProduction();
+            renderFinance();
+            renderWishlist();
+
+            // Refresh lucide icons
+            lucide.createIcons();
+        }
+
+        // 1. DASHBOARD
+        function renderDashboard() {
+            // Income, Expenses
+            const totalInc = appState.transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + Number(t.amount), 0);
+            const totalExp = appState.transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + Number(t.amount), 0);
+            const pendingOrdersCount = appState.orders.filter(o => o.status === 'pending' || o.status === 'in_progress').length;
+            const readyProductsCount = appState.products.filter(p => p.status === 'available').reduce((acc, p) => acc + Number(p.qty || 0), 0);
+
+            document.getElementById('dash-income').innerText = formatMoney(totalInc);
+            document.getElementById('dash-expenses').innerText = formatMoney(totalExp);
+            document.getElementById('dash-pending-orders').innerText = pendingOrdersCount;
+            document.getElementById('dash-ready-products').innerText = readyProductsCount;
+
+            // Low Stock list
+            const lowStockItems = appState.materials.filter(m => Number(m.quantity) <= Number(m.min || 0));
+            const lowStockContainer = document.getElementById('dash-low-stock-list');
+            if (lowStockItems.length === 0) {
+                lowStockContainer.innerHTML = `<p class="text-xs text-slate-400 py-2">All yarn and supplies are well stocked!</p>`;
+            } else {
+                lowStockContainer.innerHTML = lowStockItems.map(m => `
+                    <div class="flex items-center justify-between p-2.5 bg-amber-50/70 rounded-xl border border-amber-100">
+                        <div>
+                            <p class="font-bold text-xs text-slate-800">${m.name}</p>
+                            <p class="text-[11px] text-amber-700">${m.color || m.category} — ${m.quantity} ${m.unit} remaining</p>
+                        </div>
+                        <span class="text-[10px] bg-amber-200 text-amber-900 font-extrabold px-2 py-0.5 rounded-full">Low</span>
+                    </div>
+                `).join('');
+            }
+
+            // Production List
+            const activeTasks = appState.tasks.filter(t => t.status !== 'completed').slice(0, 4);
+            const prodList = document.getElementById('dash-production-list');
+            if (activeTasks.length === 0) {
+                prodList.innerHTML = `<p class="text-xs text-slate-400 py-2">No active tasks in the queue.</p>`;
+            } else {
+                prodList.innerHTML = activeTasks.map(t => `
+                    <div class="flex items-center justify-between p-3 bg-purple-50/50 rounded-xl border border-purple-50">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-2.5 h-2.5 rounded-full ${t.priority === 'Urgent' ? 'bg-rose-500' : 'bg-purple-500'}"></span>
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">${t.title}</p>
+                                <p class="text-xs text-slate-400">Deadline: ${t.deadline || 'No date'}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-white border border-purple-100 text-purple-700 uppercase text-[10px]">${t.status.replace('_', ' ')}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Recent Orders Tbody
+            const recentOrders = appState.orders.slice(-4).reverse();
+            const ordersTbody = document.getElementById('dash-orders-tbody');
+            if (recentOrders.length === 0) {
+                ordersTbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-xs text-slate-400">No orders recorded yet.</td></tr>`;
+            } else {
+                ordersTbody.innerHTML = recentOrders.map(o => `
+                    <tr class="hover:bg-purple-50/40">
+                        <td class="py-3 font-semibold text-slate-800">${o.customer}</td>
+                        <td class="py-3"><span class="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">${o.status}</span></td>
+                        <td class="py-3 text-xs text-slate-500 capitalize">${o.paymentStatus}</td>
+                        <td class="py-3 text-right font-extrabold text-slate-900">${formatMoney(o.amount)}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // 2. INVENTORY
+        function renderInventory() {
+            const query = (document.getElementById('inventory-search')?.value || '').toLowerCase();
+            const catFilter = document.getElementById('inventory-category-filter')?.value || 'ALL';
+            const grid = document.getElementById('inventory-grid');
+
+            const filtered = appState.materials.filter(m => {
+                const matchesSearch = m.name.toLowerCase().includes(query) || (m.color && m.color.toLowerCase().includes(query));
+                const matchesCat = catFilter === 'ALL' || m.category === catFilter;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-3xl border border-purple-100 p-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600">
+                            <i data-lucide="box" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base">No materials found</h4>
+                        <p class="text-xs text-slate-400 mt-1">Add your yarn skeins, hooks, or safety eyes to start tracking stock.</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(m => {
+                const isLow = Number(m.quantity) <= Number(m.min || 0);
+                return `
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">${m.category}</span>
+                            ${isLow ? `<span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 flex items-center space-x-1"><i data-lucide="alert-circle" class="w-3 h-3"></i><span>Low Stock</span></span>` : ''}
+                        </div>
+                        <h4 class="font-extrabold text-slate-900 text-base mt-2">${m.name}</h4>
+                        <p class="text-xs text-slate-500 font-medium">${m.color ? 'Color: ' + m.color : 'No color tag'}</p>
+                    </div>
+
+                    <div class="bg-purple-50/60 p-3 rounded-xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">On Hand</span>
+                            <p class="text-lg font-extrabold text-slate-900">${m.quantity} <span class="text-xs font-semibold text-slate-500">${m.unit}</span></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Unit Cost</span>
+                            <p class="text-sm font-bold text-slate-700">${formatMoney(m.cost)}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-purple-50 pt-3">
+                        <div class="flex items-center space-x-1">
+                            <button onclick="adjustStock('${m.id}', -1)" class="w-8 h-8 rounded-lg border border-purple-200 bg-white hover:bg-purple-50 flex items-center justify-center font-bold text-purple-700">-</button>
+                            <button onclick="adjustStock('${m.id}', 1)" class="w-8 h-8 rounded-lg border border-purple-200 bg-white hover:bg-purple-50 flex items-center justify-center font-bold text-purple-700">+</button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editMaterial('${m.id}')" class="text-slate-400 hover:text-purple-600 p-1"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                            <button onclick="deleteMaterial('${m.id}')" class="text-slate-400 hover:text-rose-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Adjust Stock inline
+        function adjustStock(id, delta) {
+            const mat = appState.materials.find(m => m.id === id);
+            if (mat) {
+                mat.quantity = Math.max(0, Number(mat.quantity) + delta);
+                saveData();
+            }
+        }
+
+        // 3. PRODUCTS
+        function renderProducts() {
+            const query = (document.getElementById('product-search')?.value || '').toLowerCase();
+            const statusFilter = document.getElementById('product-status-filter')?.value || 'ALL';
+            const grid = document.getElementById('products-grid');
+
+            const filtered = appState.products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(query) || (p.desc && p.desc.toLowerCase().includes(query));
+                const matchesStatus = statusFilter === 'ALL' || p.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-3xl border border-purple-100 p-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600">
+                            <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base">No products found</h4>
+                        <p class="text-xs text-slate-400 mt-1">Catalog your handmade creations here.</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl border border-purple-100 shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div class="p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">${p.category}</span>
+                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${p.status === 'available' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">${p.status}</span>
+                        </div>
+                        <h4 class="font-extrabold text-slate-900 text-lg leading-tight">${p.name}</h4>
+                        <p class="text-xs text-slate-500 line-clamp-2">${p.desc || 'No description provided.'}</p>
+                    </div>
+
+                    <div class="px-5 py-4 bg-purple-50/50 border-t border-purple-50 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Selling Price</span>
+                            <p class="text-base font-extrabold text-purple-900">${formatMoney(p.price)}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Stock Qty</span>
+                            <p class="text-sm font-bold text-slate-700">${p.qty || 0} ready</p>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-white border-t border-purple-50 flex items-center justify-end space-x-2">
+                        <button onclick="editProduct('${p.id}')" class="text-xs font-bold text-slate-600 hover:text-purple-700 px-3 py-1.5 rounded-lg border border-purple-100">Edit</button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-xs font-bold text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 4. ORDERS & CRM
+        function renderOrders() {
+            const query = (document.getElementById('order-search')?.value || '').toLowerCase();
+            const statusFilter = document.getElementById('order-status-filter')?.value || 'ALL';
+            const container = document.getElementById('orders-list-container');
+
+            const filtered = appState.orders.filter(o => {
+                const matchesSearch = o.customer.toLowerCase().includes(query) || o.item.toLowerCase().includes(query);
+                const matchesStatus = statusFilter === 'ALL' || o.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="py-12 text-center bg-white rounded-3xl border border-purple-100 p-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600">
+                            <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base">No orders found</h4>
+                        <p class="text-xs text-slate-400 mt-1">Create an order to manage customer requests and deposits.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(o => `
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-2">
+                            <h4 class="font-extrabold text-slate-900 text-base">${o.customer}</h4>
+                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800">${o.status}</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase text-[10px]">${o.paymentStatus}</span>
+                        </div>
+                        <p class="text-sm font-semibold text-purple-900">${o.item}</p>
+                        <p class="text-xs text-slate-400">Contact: ${o.contact || 'None'} | Due: ${o.date || 'Not set'}</p>
+                    </div>
+
+                    <div class="flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 pt-3 md:pt-0 border-purple-50">
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Order Amount</span>
+                            <p class="text-lg font-extrabold text-slate-900">${formatMoney(o.amount)}</p>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="editOrder('${o.id}')" class="p-2 text-slate-500 hover:text-purple-600 hover:bg-purple-50 rounded-xl"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                            <button onclick="deleteOrder('${o.id}')" class="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 5. PRODUCTION KANBAN
+        function renderProduction() {
+            const cols = { todo: [], in_progress: [], completed: [] };
+            appState.tasks.forEach(t => {
+                if (cols[t.status]) cols[t.status].push(t);
+                else cols.todo.push(t);
+            });
+
+            document.getElementById('count-todo').innerText = cols.todo.length;
+            document.getElementById('count-in_progress').innerText = cols.in_progress.length;
+            document.getElementById('count-completed').innerText = cols.completed.length;
+
+            ['todo', 'in_progress', 'completed'].forEach(status => {
+                const colEl = document.getElementById(`col-${status}`);
+                if (cols[status].length === 0) {
+                    colEl.innerHTML = `<div class="h-24 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center text-xs text-slate-400">Empty</div>`;
+                } else {
+                    colEl.innerHTML = cols[status].map(t => `
+                        <div class="bg-white p-4 rounded-xl border border-purple-100 shadow-sm space-y-3">
+                            <div class="flex items-start justify-between">
+                                <h4 class="font-bold text-sm text-slate-800">${t.title}</h4>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${t.priority === 'Urgent' ? 'bg-rose-100 text-rose-700' : 'bg-purple-100 text-purple-700'}">${t.priority}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                                <span><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i>${t.deadline || 'No date'}</span>
+                                <div class="flex space-x-1">
+                                    ${status !== 'todo' ? `<button onclick="moveTask('${t.id}', 'prev')" class="p-1 hover:bg-purple-50 rounded text-purple-600"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>` : ''}
+                                    ${status !== 'completed' ? `<button onclick="moveTask('${t.id}', 'next')" class="p-1 hover:bg-purple-50 rounded text-purple-600"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>` : ''}
+                                    <button onclick="deleteTask('${t.id}')" class="p-1 hover:bg-rose-50 rounded text-rose-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+
+        function moveTask(id, dir) {
+            const task = appState.tasks.find(t => t.id === id);
+            if (!task) return;
+            const flow = ['todo', 'in_progress', 'completed'];
+            let idx = flow.indexOf(task.status);
+            if (dir === 'next' && idx < flow.length - 1) idx++;
+            if (dir === 'prev' && idx > 0) idx--;
+            task.status = flow[idx];
+            saveData();
+        }
+
+        // 6. FINANCE
+        function renderFinance() {
+            const totalInc = appState.transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + Number(t.amount), 0);
+            const totalExp = appState.transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + Number(t.amount), 0);
+            const profit = totalInc - totalExp;
+
+            document.getElementById('fin-income').innerText = formatMoney(totalInc);
+            document.getElementById('fin-expenses').innerText = formatMoney(totalExp);
+            document.getElementById('fin-profit').innerText = formatMoney(profit);
+
+            const tbody = document.getElementById('finance-tbody');
+            if (appState.transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-xs text-slate-400">No transactions recorded.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = appState.transactions.slice().reverse().map(t => `
+                <tr class="hover:bg-purple-50/30">
+                    <td class="py-3 text-xs text-slate-500 font-medium">${t.date}</td>
+                    <td class="py-3"><span class="text-xs font-extrabold uppercase px-2 py-0.5 rounded-full ${t.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${t.type}</span></td>
+                    <td class="py-3 text-xs font-semibold text-slate-700">${t.category}</td>
+                    <td class="py-3 text-xs text-slate-600">${t.description}</td>
+                    <td class="py-3 text-right font-extrabold ${t.type === 'income' ? 'text-emerald-700' : 'text-rose-700'}">${t.type === 'income' ? '+' : '-'}${formatMoney(t.amount)}</td>
+                    <td class="py-3 text-center"><button onclick="deleteTransaction('${t.id}')" class="text-slate-400 hover:text-rose-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        // 7. WISHLIST
+        function renderWishlist() {
+            const grid = document.getElementById('ideas-grid');
+            if (appState.ideas.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-3xl border border-purple-100 p-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600">
+                            <i data-lucide="sparkles" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base">No inspiration saved yet</h4>
+                        <p class="text-xs text-slate-400 mt-1">Keep track of pattern ideas and yarn wishlist items.</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = appState.ideas.map(i => `
+                <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm flex flex-col justify-between space-y-3">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">${i.type}</span>
+                        <h4 class="font-extrabold text-slate-900 text-base">${i.title}</h4>
+                        <p class="text-xs text-slate-500">${i.notes || 'No description added.'}</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-purple-50 pt-3">
+                        <span class="text-xs font-bold text-purple-900">${i.cost ? 'Est: ' + formatMoney(i.cost) : ''}</span>
+                        <button onclick="deleteIdea('${i.id}')" class="text-slate-400 hover:text-rose-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ================= FORM SUBMISSION HANDLERS =================
+
+        function handleMaterialSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('mat-id').value || 'm_' + Date.now();
+            const newMat = {
+                id,
+                name: document.getElementById('mat-name').value,
+                category: document.getElementById('mat-category').value,
+                color: document.getElementById('mat-color').value,
+                quantity: parseFloat(document.getElementById('mat-quantity').value || 0),
+                unit: document.getElementById('mat-unit').value,
+                cost: parseFloat(document.getElementById('mat-cost').value || 0),
+                min: parseFloat(document.getElementById('mat-min').value || 0)
+            };
+
+            const existingIdx = appState.materials.findIndex(m => m.id === id);
+            if (existingIdx >= 0) appState.materials[existingIdx] = newMat;
+            else appState.materials.push(newMat);
+
+            saveData();
+            closeModal('modal-material');
+            showToast("Material saved successfully!");
+            document.getElementById('form-material').reset();
+            document.getElementById('mat-id').value = '';
+        }
+
+        function editMaterial(id) {
+            const mat = appState.materials.find(m => m.id === id);
+            if (!mat) return;
+            document.getElementById('mat-id').value = mat.id;
+            document.getElementById('mat-name').value = mat.name;
+            document.getElementById('mat-category').value = mat.category;
+            document.getElementById('mat-color').value = mat.color || '';
+            document.getElementById('mat-quantity').value = mat.quantity;
+            document.getElementById('mat-unit').value = mat.unit;
+            document.getElementById('mat-cost').value = mat.cost;
+            document.getElementById('mat-min').value = mat.min || 2;
+            openModal('modal-material');
+        }
+
+        function deleteMaterial(id) {
+            if (confirm("Are you sure you want to delete this material?")) {
+                appState.materials = appState.materials.filter(m => m.id !== id);
+                saveData();
+                showToast("Material removed.");
+            }
+        }
+
+        function handleProductSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('prod-id').value || 'p_' + Date.now();
+            const newProd = {
+                id,
+                name: document.getElementById('prod-name').value,
+                category: document.getElementById('prod-category').value,
+                status: document.getElementById('prod-status').value,
+                price: parseFloat(document.getElementById('prod-price').value || 0),
+                cost: parseFloat(document.getElementById('prod-cost').value || 0),
+                qty: parseInt(document.getElementById('prod-qty').value || 0),
+                desc: document.getElementById('prod-desc').value
+            };
+
+            const idx = appState.products.findIndex(p => p.id === id);
+            if (idx >= 0) appState.products[idx] = newProd;
+            else appState.products.push(newProd);
+
+            saveData();
+            closeModal('modal-product');
+            showToast("Product catalog updated!");
+            document.getElementById('form-product').reset();
+            document.getElementById('prod-id').value = '';
+        }
+
+        function editProduct(id) {
+            const p = appState.products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('prod-id').value = p.id;
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-status').value = p.status;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-cost').value = p.cost;
+            document.getElementById('prod-qty').value = p.qty;
+            document.getElementById('prod-desc').value = p.desc || '';
+            openModal('modal-product');
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Delete this product from catalog?")) {
+                appState.products = appState.products.filter(p => p.id !== id);
+                saveData();
+                showToast("Product deleted.");
+            }
+        }
+
+        function handleOrderSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('ord-id').value || 'o_' + Date.now();
+            const newOrd = {
+                id,
+                customer: document.getElementById('ord-customer').value,
+                contact: document.getElementById('ord-contact').value,
+                item: document.getElementById('ord-item').value,
+                status: document.getElementById('ord-status').value,
+                paymentStatus: document.getElementById('ord-payment-status').value,
+                amount: parseFloat(document.getElementById('ord-amount').value || 0),
+                date: document.getElementById('ord-date').value
+            };
+
+            const idx = appState.orders.findIndex(o => o.id === id);
+            if (idx >= 0) appState.orders[idx] = newOrd;
+            else appState.orders.push(newOrd);
+
+            saveData();
+            closeModal('modal-order');
+            showToast("Order saved successfully!");
+            document.getElementById('form-order').reset();
+            document.getElementById('ord-id').value = '';
+        }
+
+        function editOrder(id) {
+            const o = appState.orders.find(x => x.id === id);
+            if (!o) return;
+            document.getElementById('ord-id').value = o.id;
+            document.getElementById('ord-customer').value = o.customer;
+            document.getElementById('ord-contact').value = o.contact || '';
+            document.getElementById('ord-item').value = o.item;
+            document.getElementById('ord-status').value = o.status;
+            document.getElementById('ord-payment-status').value = o.paymentStatus;
+            document.getElementById('ord-amount').value = o.amount;
+            document.getElementById('ord-date').value = o.date || '';
+            openModal('modal-order');
+        }
+
+        function deleteOrder(id) {
+            if (confirm("Delete this order?")) {
+                appState.orders = appState.orders.filter(o => o.id !== id);
+                saveData();
+                showToast("Order removed.");
+            }
+        }
+
+        function handleTaskSubmit(e) {
+            e.preventDefault();
+            const newTask = {
+                id: 't_' + Date.now(),
+                title: document.getElementById('task-title').value,
+                priority: document.getElementById('task-priority').value,
+                deadline: document.getElementById('task-deadline').value,
+                status: 'todo'
+            };
+            appState.tasks.push(newTask);
+            saveData();
+            closeModal('modal-task');
+            showToast("Production task created!");
+            document.getElementById('form-task').reset();
+        }
+
+        function deleteTask(id) {
+            appState.tasks = appState.tasks.filter(t => t.id !== id);
+            saveData();
+        }
+
+        function handleFinanceSubmit(e, type) {
+            e.preventDefault();
+            const desc = type === 'income' ? document.getElementById('inc-desc').value : document.getElementById('exp-desc').value;
+            const cat = type === 'income' ? document.getElementById('inc-cat').value : document.getElementById('exp-cat').value;
+            const amt = type === 'income' ? document.getElementById('inc-amount').value : document.getElementById('exp-amount').value;
+
+            const newTx = {
+                id: 'f_' + Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                type,
+                category: cat,
+                description: desc,
+                amount: parseFloat(amt || 0)
+            };
+            appState.transactions.push(newTx);
+            saveData();
+            closeModal(`modal-${type}`);
+            showToast(`${type === 'income' ? 'Income' : 'Expense'} recorded!`);
+            document.getElementById(`form-${type}`).reset();
+        }
+
+        function deleteTransaction(id) {
+            if (confirm("Remove transaction?")) {
+                appState.transactions = appState.transactions.filter(t => t.id !== id);
+                saveData();
+                showToast("Transaction deleted.");
+            }
+        }
+
+        function handleIdeaSubmit(e) {
+            e.preventDefault();
+            const newIdea = {
+                id: 'i_' + Date.now(),
+                title: document.getElementById('idea-title').value,
+                type: document.getElementById('idea-type').value,
+                cost: parseFloat(document.getElementById('idea-cost').value || 0),
+                notes: document.getElementById('idea-notes').value
+            };
+            appState.ideas.push(newIdea);
+            saveData();
+            closeModal('modal-idea');
+            showToast("Idea added to wishlist!");
+            document.getElementById('form-idea').reset();
+        }
+
+        function deleteIdea(id) {
+            appState.ideas = appState.ideas.filter(i => i.id !== id);
+            saveData();
+        }
+
+        // ================= SETTINGS & BACKUP =================
+
+        function saveSettings() {
+            appState.settings.businessName = document.getElementById('setting-biz-name').value;
+            appState.settings.currency = document.getElementById('setting-currency').value;
+            saveData();
+            showToast("Settings updated!");
+        }
+
+        function exportJSONData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Loopi_OS_Backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast("Backup JSON file exported!");
+        }
+
+        function importJSONData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported && typeof imported === 'object') {
+                        appState = imported;
+                        saveData();
+                        showToast("Business data restored successfully!");
+                    } else {
+                        throw new Error("Invalid structure");
+                    }
+                } catch(err) {
+                    showToast("Failed to parse JSON backup file.", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function confirmResetData() {
+            if (confirm("WARNING: This will permanently delete all stored local data! Proceed?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                appState = JSON.parse(JSON.stringify(initialAppState));
+                saveData();
+                showToast("All data reset to initial defaults.");
+            }
+        }
+
+        // INITIALIZE APP ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+        });
+    </script>
+</body>
+</html>
